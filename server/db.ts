@@ -1,6 +1,6 @@
 import { eq } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
-import { InsertUser, users } from "../drizzle/schema";
+import { InsertUser, users, bandMembers, InsertBandMember, applications, InsertApplication } from "../drizzle/schema";
 import { ENV } from './_core/env';
 
 let _db: ReturnType<typeof drizzle> | null = null;
@@ -89,4 +89,66 @@ export async function getUserByOpenId(openId: string) {
   return result.length > 0 ? result[0] : undefined;
 }
 
-// TODO: add feature queries here as your schema grows.
+// Band members queries
+export async function getBandMembers() {
+  const db = await getDb();
+  if (!db) return [];
+  return db.select().from(bandMembers).orderBy(bandMembers.order);
+}
+
+export async function createBandMember(member: InsertBandMember) {
+  const db = await getDb();
+  if (!db) return null;
+  const result = await db.insert(bandMembers).values(member);
+  return result;
+}
+
+export async function updateBandMember(id: number, member: Partial<InsertBandMember>) {
+  const db = await getDb();
+  if (!db) return null;
+  return db.update(bandMembers).set(member).where(eq(bandMembers.id, id));
+}
+
+export async function deleteBandMember(id: number) {
+  const db = await getDb();
+  if (!db) return null;
+  return db.delete(bandMembers).where(eq(bandMembers.id, id));
+}
+
+// Applications queries
+export async function getApplications(status?: string) {
+  const db = await getDb();
+  if (!db) return [];
+  if (status) {
+    return db.select().from(applications).where(eq(applications.status, status as any));
+  }
+  return db.select().from(applications).orderBy(applications.createdAt);
+}
+
+export async function getApplicationById(id: number) {
+  const db = await getDb();
+  if (!db) return null;
+  const result = await db.select().from(applications).where(eq(applications.id, id)).limit(1);
+  return result.length > 0 ? result[0] : null;
+}
+
+export async function createApplication(app: InsertApplication) {
+  const db = await getDb();
+  if (!db) return null;
+  const result = await db.insert(applications).values(app);
+  return result;
+}
+
+export async function updateApplication(id: number, app: Partial<InsertApplication>) {
+  const db = await getDb();
+  if (!db) return null;
+  return db.update(applications).set(app).where(eq(applications.id, id));
+}
+
+export async function deleteApplication(id: number) {
+  const db = await getDb();
+  if (!db) return null;
+  return db.delete(applications).where(eq(applications.id, id));
+}
+
+
