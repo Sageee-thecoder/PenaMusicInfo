@@ -5,6 +5,7 @@ import { publicProcedure, router, protectedProcedure } from "./_core/trpc";
 import { z } from "zod";
 import { getBandMembers, createBandMember, updateBandMember, deleteBandMember, getApplications, getApplicationById, createApplication, updateApplication } from "./db";
 import { TRPCError } from "@trpc/server";
+import { sendApplicationStatusEmail, sendApplicationConfirmationEmail } from "./email";
 
 export const appRouter = router({
   system: systemRouter,
@@ -78,17 +79,39 @@ export const appRouter = router({
         appliedRole: z.enum(["vokal", "gitarist", "baterist", "kemancı", "piyanist"]),
         message: z.string().optional(),
       }))
-      .mutation(({ input }) => createApplication({ ...input, status: "pending" })),
+      .mutation(async ({ input }) => {
+        const result = await createApplication({ ...input, status: "pending" });
+        // Send confirmation email
+        await sendApplicationConfirmationEmail(input.email, input.name);
+        return result;
+      }),
     update: protectedProcedure
       .input(z.object({
         id: z.number(),
         status: z.enum(["pending", "reviewed", "accepted", "rejected"]).optional(),
         notes: z.string().optional(),
       }))
-      .mutation(({ input, ctx }) => {
+      .mutation(async ({ input, ctx }) => {
         if (ctx.user?.role !== "admin") throw new TRPCError({ code: "FORBIDDEN" });
         const { id, ...data } = input;
-        return updateApplication(id, data);
+
+        // Get application details before updating
+        const application = await getApplicationById(id);
+        if (!application) throw new TRPCError({ code: "NOT_FOUND" });
+
+        const result = await updateApplication(id, data);
+
+        // Send status update email if status changed
+        if (data.status && data.status !== application.status) {
+          await sendApplicationStatusEmail(
+            application.email,
+            application.name,
+            data.status,
+            data.notes
+          );
+        }
+
+        return result;
       }),
   }),
 });

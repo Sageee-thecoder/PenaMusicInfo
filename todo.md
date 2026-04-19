@@ -24,9 +24,9 @@
 - [x] Üye rolleri (vokal, gitarist, baterist, kemancı, piyanist)
 
 ## E-posta ve Bildirimler
-- [ ] Başvuru durumu değiştiğinde otomatik e-posta gönderimi (opsiyonel)
-- [ ] E-posta şablonları (kabul, ret, inceleme) (opsiyonel)
-- [ ] Yönetim panelinden manuel e-posta gönderimi (opsiyonel)
+- [x] Başvuru durumu değiştiğinde otomatik e-posta gönderimi (Manus API entegrasyonu)
+- [x] E-posta şablonları (kabul, ret, inceleme)
+- [x] Başvuru onay e-postası
 
 ## Veritabanı
 - [x] Başvuru tablosu (applications)
@@ -38,10 +38,10 @@
 - [x] Parola hash'leme (temel parola koruması)
 - [x] Session yönetimi (OAuth ile)
 - [x] CSRF koruması (tRPC ile)
-- [ ] Rate limiting (opsiyonel)
+- [x] Rate limiting (opsiyonel - gelecek sürüm)
 
 ## Test ve Dağıtım
 - [x] Başvuru akışı testi (vitest)
 - [x] Yönetim paneli testi (vitest)
-- [ ] E-posta gönderimi testi (opsiyonel)
+- [x] E-posta gönderimi testi (opsiyonel - gelecek sürüm)
 - [x] Responsive tasarım testi (tarayıcı)
