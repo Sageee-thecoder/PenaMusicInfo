@@ -1,6 +1,7 @@
-import { eq } from "drizzle-orm";
+
 import { drizzle } from "drizzle-orm/mysql2";
-import { InsertUser, users, bandMembers, InsertBandMember, applications, InsertApplication } from "../drizzle/schema";
+import { InsertUser, users, bandMembers, InsertBandMember, applications, InsertApplication, songs, InsertSong, Song, likes, InsertLike, comments, InsertComment, memberAccessCodes, InsertMemberAccessCode } from "../drizzle/schema";
+import { eq, and } from "drizzle-orm";
 import { ENV } from './_core/env';
 
 let _db: ReturnType<typeof drizzle> | null = null;
@@ -152,3 +153,104 @@ export async function deleteApplication(id: number) {
 }
 
 
+
+// Member access codes queries
+export async function getMemberAccessCode(accessCode: string) {
+  const db = await getDb();
+  if (!db) return null;
+  const result = await db.select().from(memberAccessCodes).where(eq(memberAccessCodes.accessCode, accessCode)).limit(1);
+  return result.length > 0 ? result[0] : null;
+}
+
+export async function createMemberAccessCode(code: InsertMemberAccessCode) {
+  const db = await getDb();
+  if (!db) return null;
+  return db.insert(memberAccessCodes).values(code);
+}
+
+export async function getMemberAccessCodeByMemberId(bandMemberId: number) {
+  const db = await getDb();
+  if (!db) return null;
+  const result = await db.select().from(memberAccessCodes).where(eq(memberAccessCodes.bandMemberId, bandMemberId)).limit(1);
+  return result.length > 0 ? result[0] : null;
+}
+
+// Songs queries
+export async function getSongs(bandMemberId?: number) {
+  const db = await getDb();
+  if (!db) return [];
+  if (bandMemberId) {
+    return db.select().from(songs).where(eq(songs.bandMemberId, bandMemberId)).orderBy(songs.createdAt);
+  }
+  return db.select().from(songs).orderBy(songs.createdAt);
+}
+
+export async function getSongById(id: number) {
+  const db = await getDb();
+  if (!db) return null;
+  const result = await db.select().from(songs).where(eq(songs.id, id)).limit(1);
+  return result.length > 0 ? result[0] : null;
+}
+
+export async function createSong(song: InsertSong) {
+  const db = await getDb();
+  if (!db) return null;
+  return db.insert(songs).values(song);
+}
+
+export async function updateSong(id: number, song: Partial<InsertSong>) {
+  const db = await getDb();
+  if (!db) return null;
+  return db.update(songs).set(song).where(eq(songs.id, id));
+}
+
+export async function deleteSong(id: number) {
+  const db = await getDb();
+  if (!db) return null;
+  return db.delete(songs).where(eq(songs.id, id));
+}
+
+// Likes queries
+export async function getLikesBySongId(songId: number) {
+  const db = await getDb();
+  if (!db) return [];
+  return db.select().from(likes).where(eq(likes.songId, songId));
+}
+
+export async function checkLike(songId: number, likedByMemberId: number) {
+  const db = await getDb();
+  if (!db) return null;
+  const result = await db.select().from(likes).where(and(eq(likes.songId, songId), eq(likes.likedByMemberId, likedByMemberId))).limit(1);
+  return result.length > 0 ? result[0] : null;
+}
+
+export async function createLike(like: InsertLike) {
+  const db = await getDb();
+  if (!db) return null;
+  return db.insert(likes).values(like);
+}
+
+export async function deleteLike(songId: number, likedByMemberId: number) {
+  const db = await getDb();
+  if (!db) return null;
+  return db.delete(likes).where(and(eq(likes.songId, songId), eq(likes.likedByMemberId, likedByMemberId)));
+}
+
+// Comments queries
+export async function getCommentsBySongId(songId: number) {
+  const db = await getDb();
+  if (!db) return [];
+  return db.select().from(comments).where(eq(comments.songId, songId)).orderBy(comments.createdAt);
+}
+
+export async function createComment(comment: InsertComment) {
+  const db = await getDb();
+  if (!db) return null;
+  return db.insert(comments).values(comment);
+}
+
+export async function deleteComment(id: number) {
+  const db = await getDb();
+  if (!db) return null;
+  return db.delete(comments).where(eq(comments.id, id));
+}

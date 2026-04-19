@@ -3,7 +3,7 @@ import { getSessionCookieOptions } from "./_core/cookies";
 import { systemRouter } from "./_core/systemRouter";
 import { publicProcedure, router, protectedProcedure } from "./_core/trpc";
 import { z } from "zod";
-import { getBandMembers, createBandMember, updateBandMember, deleteBandMember, getApplications, getApplicationById, createApplication, updateApplication } from "./db";
+import { getBandMembers, createBandMember, updateBandMember, deleteBandMember, getApplications, getApplicationById, createApplication, updateApplication, getMemberAccessCode, createMemberAccessCode, getSongs, createSong, updateSong, deleteSong, getLikesBySongId, checkLike, createLike, deleteLike, getCommentsBySongId, createComment, deleteComment } from "./db";
 import { TRPCError } from "@trpc/server";
 import { sendApplicationStatusEmail, sendApplicationConfirmationEmail } from "./email";
 
@@ -112,6 +112,88 @@ export const appRouter = router({
         }
 
         return result;
+      }),
+  }),
+
+  // Songs router
+  songs: router({
+    list: publicProcedure
+      .input(z.object({ bandMemberId: z.number().optional() }).optional())
+      .query(({ input }) => getSongs(input?.bandMemberId)),
+    create: publicProcedure
+      .input(z.object({
+        bandMemberId: z.number(),
+        title: z.string().min(1),
+        description: z.string().optional(),
+        songUrl: z.string().optional(),
+        youtubeUrl: z.string().optional(),
+        spotifyUrl: z.string().optional(),
+      }))
+      .mutation(({ input }) => createSong(input)),
+    update: publicProcedure
+      .input(z.object({
+        id: z.number(),
+        title: z.string().optional(),
+        description: z.string().optional(),
+        songUrl: z.string().optional(),
+        youtubeUrl: z.string().optional(),
+        spotifyUrl: z.string().optional(),
+      }))
+      .mutation(({ input }) => {
+        const { id, ...data } = input;
+        return updateSong(id, data);
+      }),
+    delete: publicProcedure
+      .input(z.object({ id: z.number() }))
+      .mutation(({ input }) => deleteSong(input.id)),
+  }),
+
+  // Likes router
+  likes: router({
+    list: publicProcedure
+      .input(z.object({ songId: z.number() }))
+      .query(({ input }) => getLikesBySongId(input.songId)),
+    toggle: publicProcedure
+      .input(z.object({ songId: z.number(), memberId: z.number() }))
+      .mutation(async ({ input }) => {
+        const existing = await checkLike(input.songId, input.memberId);
+        if (existing) {
+          await deleteLike(input.songId, input.memberId);
+          return { liked: false };
+        } else {
+          await createLike({ songId: input.songId, likedByMemberId: input.memberId });
+          return { liked: true };
+        }
+      }),
+  }),
+
+  // Comments router
+  comments: router({
+    list: publicProcedure
+      .input(z.object({ songId: z.number() }))
+      .query(({ input }) => getCommentsBySongId(input.songId)),
+    create: publicProcedure
+      .input(z.object({
+        songId: z.number(),
+        commentedByMemberId: z.number(),
+        content: z.string().min(1),
+      }))
+      .mutation(({ input }) => createComment(input)),
+    delete: publicProcedure
+      .input(z.object({ id: z.number() }))
+      .mutation(({ input }) => deleteComment(input.id)),
+  }),
+
+  // Member access codes router
+  memberAccess: router({
+    verify: publicProcedure
+      .input(z.object({ accessCode: z.string() }))
+      .query(async ({ input }) => {
+        const code = await getMemberAccessCode(input.accessCode);
+        if (!code) {
+          throw new TRPCError({ code: "UNAUTHORIZED" });
+        }
+        return { memberId: code.bandMemberId, accessCode: code.accessCode };
       }),
   }),
 });

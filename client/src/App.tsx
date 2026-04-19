@@ -7,6 +7,7 @@ import { ThemeProvider } from "./contexts/ThemeContext";
 import Home from "./pages/Home";
 import AdminDashboard from "./pages/AdminDashboard";
 import ApplicationForm from "./pages/ApplicationForm";
+import MemberDashboard from "./pages/MemberDashboard";
 
 function Router() {
   // make sure to consider if you need authentication for certain routes
@@ -14,6 +15,7 @@ function Router() {
     <Switch>
       <Route path="/" component={Home} />
       <Route path="/apply" component={ApplicationForm} />
+      <Route path="/member-panel" component={MemberDashboard} />
       <Route path="/admin-panel-secret-xyz" component={AdminDashboard} />
       <Route path="/404" component={NotFound} />
       {/* Final fallback route */}

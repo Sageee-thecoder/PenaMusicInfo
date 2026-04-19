@@ -60,3 +60,65 @@ export const applications = mysqlTable("applications", {
 
 export type Application = typeof applications.$inferSelect;
 export type InsertApplication = typeof applications.$inferInsert;
+
+/**
+ * Member access codes table - stores unique codes for each band member
+ */
+export const memberAccessCodes = mysqlTable("member_access_codes", {
+  id: int("id").autoincrement().primaryKey(),
+  bandMemberId: int("band_member_id").notNull(),
+  accessCode: varchar("access_code", { length: 50 }).notNull().unique(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type MemberAccessCode = typeof memberAccessCodes.$inferSelect;
+export type InsertMemberAccessCode = typeof memberAccessCodes.$inferInsert;
+
+/**
+ * Songs table - stores songs created by band members
+ */
+export const songs = mysqlTable("songs", {
+  id: int("id").autoincrement().primaryKey(),
+  bandMemberId: int("band_member_id").notNull(),
+  title: varchar("title", { length: 255 }).notNull(),
+  description: text("description"),
+  songUrl: varchar("song_url", { length: 500 }),
+  youtubeUrl: varchar("youtube_url", { length: 500 }),
+  spotifyUrl: varchar("spotify_url", { length: 500 }),
+  likesCount: int("likes_count").default(0).notNull(),
+  commentsCount: int("comments_count").default(0).notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type Song = typeof songs.$inferSelect;
+export type InsertSong = typeof songs.$inferInsert;
+
+/**
+ * Likes table - stores likes for songs
+ */
+export const likes = mysqlTable("likes", {
+  id: int("id").autoincrement().primaryKey(),
+  songId: int("song_id").notNull(),
+  likedByMemberId: int("liked_by_member_id").notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type Like = typeof likes.$inferSelect;
+export type InsertLike = typeof likes.$inferInsert;
+
+/**
+ * Comments table - stores comments on songs
+ */
+export const comments = mysqlTable("comments", {
+  id: int("id").autoincrement().primaryKey(),
+  songId: int("song_id").notNull(),
+  commentedByMemberId: int("commented_by_member_id").notNull(),
+  content: text("content").notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type Comment = typeof comments.$inferSelect;
+export type InsertComment = typeof comments.$inferInsert;

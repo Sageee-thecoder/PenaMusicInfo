@@ -15,6 +15,13 @@
       "when": 1776597885320,
       "tag": "0001_funny_hemingway",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1776599866521,
+      "tag": "0002_bouncy_bucky",
+      "breakpoints": true
     }
   ]
 }
