@@ -38,10 +38,11 @@ export default function Home() {
             <Music className="w-8 h-8 text-amber-400" />
             <span className="text-xl font-bold text-white">Müzik Grubu</span>
           </div>
-          <div className="hidden md:flex gap-8">
+          <div className="hidden md:flex gap-8 items-center">
             <a href="#about" className="text-gray-300 hover:text-white transition">Hakkımızda</a>
             <a href="#members" className="text-gray-300 hover:text-white transition">Üyeler</a>
             <a href="#join" className="text-gray-300 hover:text-white transition">Katıl</a>
+            <button onClick={() => navigate('/admin-login')} className="text-gray-300 hover:text-white transition text-sm px-3 py-1 border border-gray-600 rounded hover:border-white">Giriş</button>
           </div>
         </div>
       </nav>
@@ -68,10 +69,11 @@ export default function Home() {
               Bize Katıl <ArrowRight className="w-5 h-5" />
             </Button>
             <Button
+              onClick={() => navigate('/admin-login')}
               variant="outline"
               className="border-gray-400 text-white hover:bg-white/10 py-6 px-8 rounded-lg text-lg"
             >
-              Daha Fazla Bilgi
+              Panele Gir
             </Button>
           </div>
         </div>

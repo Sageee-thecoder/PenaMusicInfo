@@ -12,15 +12,22 @@
 - [x] Başvuruların veritabanında kaydedilmesi
 - [x] Başarılı gönderim sonrası onay mesajı
 
+## Giriş Sistemi
+- [x] Birleştirilmiş giriş sayfası (/admin-login)
+- [x] Ortak parola doğrulaması (Muzik2024)
+- [x] Kişisel kod doğrulaması (client-side)
+- [x] Giriş başarısında uygun panele yönlendirme
+- [x] Giriş hatası yönetimi
+
 ## Ortak Admin Paneli (Tüm Üyeler)
 - [x] Gizli URL yapısı ve parola koruması
 - [x] Başvuru listesi ve yönetimi
 - [x] Başvuru durumu güncelleme
 - [x] Üye yönetimi
-- [ ] Şarkı yönetimi (ekleme, düzenleme, silme)
-- [ ] Şarkı beğenileri görüntüleme
-- [ ] Şarkı yorumları görüntüleme
-- [ ] Manuel e-posta gönderimi arayüzü
+- [ ] Şarkı yönetimi UI (admin panelinde)
+- [ ] Şarkı beğenileri görüntüleme (admin panelinde)
+- [ ] Şarkı yorumları görüntüleme (admin panelinde)
+- [ ] Manuel e-posta gönderimi arayüzü (admin panelinde)
 
 ## Üye Kontrol Panelleri (Bireysel)
 - [x] Her üye için özel giriş kodu sistemi (veritabanı tabl. oluşturuldu)
@@ -28,6 +35,7 @@
 - [x] Üye paneli: Beğeni ve yorum istatistikleri (UI oluşturuldu)
 - [x] Üye paneli: Şarkı ekleme/düzenleme (UI oluşturuldu)
 - [x] Üye paneli: Diğer üyelerin panellerine erişim engeli (giriş kodu ile)
+- [x] Giriş sayfasından kişisel kodu girerek erişim
 
 ## Şarkı Yönetimi Sistemi
 - [x] Şarkı tablosu (başlık, açıklama, link, üye_id)
