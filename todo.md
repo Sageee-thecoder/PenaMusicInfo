@@ -68,7 +68,7 @@
 - [x] tRPC prosedürleri (CRUD işlemleri)
 - [x] Admin panelinde etkinlik yönetimi UI'ı
 - [x] Landing page'de yaklaşan etkinlikler
-- [x] Üye panelinde takvim görünümü (opsiyonel)
+- [x] Üye panelinde takvim görünümü (ay grid + yaklaşan etkinlikler)
 
 ## Temizleme ve Yayına Hazırlık
 - [x] Test verilerini sil (başvurular, üyeler, şarkılar)

@@ -8,6 +8,7 @@ import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle } from 
 import { Music, LogOut, Plus, Heart, MessageCircle, Edit2, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 import { trpc } from "@/lib/trpc";
+import MemberCalendar from "@/components/MemberCalendar";
 
 export default function MemberDashboard() {
   const [, navigate] = useLocation();
@@ -209,6 +210,11 @@ export default function MemberDashboard() {
               <MessageCircle className="w-10 h-10 text-blue-400/20" />
             </div>
           </Card>
+        </div>
+
+        {/* Calendar Section */}
+        <div className="mb-8">
+          <MemberCalendar />
         </div>
 
         {/* Songs Section */}
