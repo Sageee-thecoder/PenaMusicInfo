@@ -1,0 +1,36 @@
+{
+  "members": [
+    {
+      "id": 1,
+      "name": "Üye Adı",
+      "role": "vokal",
+      "bio": "Üyenin biyografisi ve müzik yolculuğu hakkında bilgi.",
+      "imageUrl": "https://example.com/image.jpg",
+      "order": 1
+    },
+    {
+      "id": 2,
+      "name": "Üye Adı",
+      "role": "gitarist",
+      "bio": "Üyenin biyografisi ve müzik yolculuğu hakkında bilgi.",
+      "imageUrl": "https://example.com/image.jpg",
+      "order": 2
+    },
+    {
+      "id": 3,
+      "name": "Üye Adı",
+      "role": "baterist",
+      "bio": "Üyenin biyografisi ve müzik yolculuğu hakkında bilgi.",
+      "imageUrl": "https://example.com/image.jpg",
+      "order": 3
+    }
+  ],
+  "roles": {
+    "vokal": "Vokal",
+    "gitarist": "Gitarist",
+    "baterist": "Baterist",
+    "kemancı": "Kemancı",
+    "piyanist": "Piyanist"
+  },
+  "instructions": "Admin panelinden üyeleri eklemek için: 1. Panele giriş yapın (Parola: Muzik2024), 2. Üye Yönetimi bölümüne gidin, 3. 'Üye Ekle' butonuna tıklayın, 4. Bilgileri doldurun ve kaydedin."
+}

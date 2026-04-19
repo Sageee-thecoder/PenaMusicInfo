@@ -1,0 +1,29 @@
+{
+  "colors": {
+    "primary": "#fbbf24",
+    "primary_dark": "#f59e0b",
+    "secondary": "#f97316",
+    "background": "#0f172a",
+    "background_light": "#1e293b",
+    "text_primary": "#ffffff",
+    "text_secondary": "#d1d5db",
+    "accent": "#ec4899"
+  },
+  "typography": {
+    "font_family": "Inter, system-ui, sans-serif",
+    "heading_size": "48px",
+    "body_size": "16px",
+    "line_height": "1.6"
+  },
+  "spacing": {
+    "unit": "4px",
+    "section_padding": "64px",
+    "component_padding": "16px"
+  },
+  "theme": {
+    "mode": "dark",
+    "border_radius": "8px",
+    "shadow": "0 4px 6px rgba(0, 0, 0, 0.1)"
+  },
+  "instructions": "Renkleri ve tasarım öğelerini bu dosyada özelleştirin. Hex renk kodlarını kullanın."
+}

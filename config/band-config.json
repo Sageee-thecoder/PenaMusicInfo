@@ -1,0 +1,21 @@
+{
+  "band": {
+    "name": "Müzik Grubu",
+    "tagline": "Müzik ile Hayat Bulur",
+    "description": "Yükselen bir müzik grubu olarak, tutkumuz müzik, misyonumuz ise insanları bir araya getirmek. Bize katılın ve bu müzik yolculuğunun parçası olun.",
+    "vision": "Müzik aracılığıyla insanları bir araya getirmek ve sanatsal ifadenin sınırlarını genişletmek.",
+    "mission": "Yüksek kaliteli müzik üretmek ve topluma ilham vermek.",
+    "founded_year": 2024,
+    "member_count": 5
+  },
+  "hero": {
+    "title": "Müzik ile Hayat Bulur",
+    "subtitle": "Yükselen bir müzik grubu olarak, tutkumuz müzik, misyonumuz ise insanları bir araya getirmek.",
+    "cta_primary": "Bize Katıl",
+    "cta_secondary": "Panele Gir"
+  },
+  "about": {
+    "title": "Hakkımızda",
+    "content": "Müzik grubumuz, her biri kendi alanında uzman müzisyenlerden oluşmaktadır. Birlikte, çeşitli müzik türlerinde eserler yaratıyor ve topluma ilham veriyoruz."
+  }
+}

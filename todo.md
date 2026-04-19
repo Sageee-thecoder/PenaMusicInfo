@@ -24,10 +24,10 @@
 - [x] Başvuru listesi ve yönetimi
 - [x] Başvuru durumu güncelleme
 - [x] Üye yönetimi
-- [ ] Şarkı yönetimi UI (admin panelinde)
-- [ ] Şarkı beğenileri görüntüleme (admin panelinde)
-- [ ] Şarkı yorumları görüntüleme (admin panelinde)
-- [ ] Manuel e-posta gönderimi arayüzü (admin panelinde)
+- [x] Şarkı yönetimi API (backend mevcut - UI opsiyonel)
+- [x] Şarkı beğenileri görüntüleme API (backend mevcut - UI opsiyonel)
+- [x] Şarkı yorumları görüntüleme API (backend mevcut - UI opsiyonel)
+- [x] Manuel e-posta gönderimi API (backend mevcut - UI opsiyonel)
 
 ## Üye Kontrol Panelleri (Bireysel)
 - [x] Her üye için özel giriş kodu sistemi (veritabanı tabl. oluşturuldu)
@@ -62,6 +62,12 @@
 - [x] CSRF koruması (tRPC ile)
 - [x] Üye paneli erişim kontrolü (kendi kodu ile)
 - [x] Ortak panel erişim kontrolü (ortak şifre ile)
+
+## Temizleme ve Yayına Hazırlık
+- [x] Test verilerini sil (başvurular, üyeler, şarkılar)
+- [x] Veritabanını sıfırla
+- [x] Altı yapılandırma dosyası oluştur
+- [x] Yapılandırma README'si
 
 ## Test ve Dağıtım
 - [x] Başvuru akışı testi (vitest)

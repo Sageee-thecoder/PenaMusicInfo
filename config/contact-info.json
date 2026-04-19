@@ -1,0 +1,16 @@
+{
+  "contact": {
+    "email": "info@musikgrubu.com",
+    "phone": "+90 (5XX) XXX XXXX",
+    "address": "Şehir, Ülke",
+    "website": "https://musikgrubu.com"
+  },
+  "business_hours": {
+    "monday_to_friday": "09:00 - 18:00",
+    "saturday": "10:00 - 16:00",
+    "sunday": "Kapalı"
+  },
+  "inquiry_email": "applications@musikgrubu.com",
+  "support_email": "support@musikgrubu.com",
+  "instructions": "İletişim bilgilerini bu dosyada güncelleyin. Landing page'de otomatik olarak gösterilecektir."
+}

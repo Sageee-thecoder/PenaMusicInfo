@@ -1,0 +1,39 @@
+{
+  "security": {
+    "admin_password": "Muzik2024",
+    "instructions": "Admin paneline girmek için bu parolayı kullanın. Üretim ortamında bunu değiştirin!"
+  },
+  "features": {
+    "enable_applications": true,
+    "enable_member_panel": true,
+    "enable_song_management": true,
+    "enable_comments": true,
+    "enable_likes": true,
+    "enable_email_notifications": true
+  },
+  "application_settings": {
+    "auto_confirm_applications": false,
+    "require_phone": false,
+    "max_message_length": 1000,
+    "application_form_title": "Müzik Grubuna Katılmak İçin Başvur",
+    "application_form_description": "Grubumuzda yer almak istiyorsanız, lütfen aşağıdaki formu doldurun."
+  },
+  "member_settings": {
+    "show_member_bios": true,
+    "show_member_images": true,
+    "allow_member_songs": true,
+    "allow_member_comments": true
+  },
+  "email_settings": {
+    "from_email": "info@musikgrubu.com",
+    "from_name": "Müzik Grubu",
+    "send_confirmation_email": true,
+    "send_status_updates": true
+  },
+  "pagination": {
+    "applications_per_page": 10,
+    "members_per_page": 6,
+    "songs_per_page": 12
+  },
+  "instructions": "Bu dosyada genel ayarları yapılandırın. Değişiklikleri kaydetmek için sunucuyu yeniden başlatın."
+}

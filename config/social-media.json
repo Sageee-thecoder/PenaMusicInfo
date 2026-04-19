@@ -1,0 +1,18 @@
+{
+  "social_media": {
+    "instagram": "https://instagram.com/musikgrubu",
+    "youtube": "https://youtube.com/@musikgrubu",
+    "spotify": "https://open.spotify.com/artist/musikgrubu",
+    "tiktok": "https://tiktok.com/@musikgrubu",
+    "twitter": "https://twitter.com/musikgrubu",
+    "facebook": "https://facebook.com/musikgrubu",
+    "soundcloud": "https://soundcloud.com/musikgrubu",
+    "apple_music": "https://music.apple.com/artist/musikgrubu"
+  },
+  "enabled_platforms": [
+    "instagram",
+    "youtube",
+    "spotify"
+  ],
+  "instructions": "Sosyal medya linklerinizi bu dosyada güncelleyin. Landing page'de otomatik olarak gösterilecektir. 'enabled_platforms' dizisine sadece aktif platformları ekleyin."
+}
