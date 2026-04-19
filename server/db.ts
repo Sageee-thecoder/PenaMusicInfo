@@ -1,6 +1,6 @@
 
 import { drizzle } from "drizzle-orm/mysql2";
-import { InsertUser, users, bandMembers, InsertBandMember, applications, InsertApplication, songs, InsertSong, Song, likes, InsertLike, comments, InsertComment, memberAccessCodes, InsertMemberAccessCode } from "../drizzle/schema";
+import { InsertUser, users, bandMembers, InsertBandMember, applications, InsertApplication, songs, InsertSong, Song, likes, InsertLike, comments, InsertComment, memberAccessCodes, InsertMemberAccessCode, events, InsertEvent, Event, eventParticipants, InsertEventParticipant } from "../drizzle/schema";
 import { eq, and } from "drizzle-orm";
 import { ENV } from './_core/env';
 
@@ -253,4 +253,84 @@ export async function deleteComment(id: number) {
   const db = await getDb();
   if (!db) return null;
   return db.delete(comments).where(eq(comments.id, id));
+}
+
+
+// Events queries
+export async function getAllEvents() {
+  const db = await getDb();
+  if (!db) return [];
+  return db.select().from(events).orderBy(events.eventDate);
+}
+
+export async function getEventById(id: number) {
+  const db = await getDb();
+  if (!db) return null;
+  const result = await db.select().from(events).where(eq(events.id, id)).limit(1);
+  return result.length > 0 ? result[0] : null;
+}
+
+export async function getUpcomingEvents(daysAhead: number = 30) {
+  const db = await getDb();
+  if (!db) return [];
+  const futureDate = new Date();
+  futureDate.setDate(futureDate.getDate() + daysAhead);
+  return db.select().from(events).where(
+    and(
+      eq(events.eventType, "konser"),
+      eq(events.eventType, "prova")
+    )
+  ).orderBy(events.eventDate).limit(10);
+}
+
+export async function createEvent(event: InsertEvent) {
+  const db = await getDb();
+  if (!db) return null;
+  const result = await db.insert(events).values(event);
+  return result;
+}
+
+export async function updateEvent(id: number, event: Partial<InsertEvent>) {
+  const db = await getDb();
+  if (!db) return null;
+  return db.update(events).set(event).where(eq(events.id, id));
+}
+
+export async function deleteEvent(id: number) {
+  const db = await getDb();
+  if (!db) return null;
+  return db.delete(events).where(eq(events.id, id));
+}
+
+// Event participants queries
+export async function getEventParticipants(eventId: number) {
+  const db = await getDb();
+  if (!db) return [];
+  return db.select().from(eventParticipants).where(eq(eventParticipants.eventId, eventId));
+}
+
+export async function addEventParticipant(participant: InsertEventParticipant) {
+  const db = await getDb();
+  if (!db) return null;
+  return db.insert(eventParticipants).values(participant);
+}
+
+export async function removeEventParticipant(eventId: number, bandMemberId: number) {
+  const db = await getDb();
+  if (!db) return null;
+  return db.delete(eventParticipants).where(
+    and(
+      eq(eventParticipants.eventId, eventId),
+      eq(eventParticipants.bandMemberId, bandMemberId)
+    )
+  );
+}
+
+export async function getEventWithParticipants(eventId: number) {
+  const db = await getDb();
+  if (!db) return null;
+  const event = await getEventById(eventId);
+  if (!event) return null;
+  const participants = await getEventParticipants(eventId);
+  return { ...event, participants };
 }

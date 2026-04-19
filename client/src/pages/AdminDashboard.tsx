@@ -11,6 +11,7 @@ import { trpc } from "@/lib/trpc";
 import { Lock, LogOut, Plus, Edit2, Trash2, Check, X } from "lucide-react";
 import { useLocation } from "wouter";
 import { toast } from "sonner";
+import EventManagement from "@/components/EventManagement";
 
 const ADMIN_PASSWORD = "admin123"; // This should be changed to a secure password
 
@@ -116,6 +117,7 @@ export default function AdminDashboard() {
           <TabsList className="bg-slate-800 border border-slate-700">
             <TabsTrigger value="applications" className="text-white">Başvurular</TabsTrigger>
             <TabsTrigger value="members" className="text-white">Üyeler</TabsTrigger>
+            <TabsTrigger value="events" className="text-white">Etkinlikler</TabsTrigger>
           </TabsList>
 
           {/* Applications Tab */}
@@ -425,3 +427,8 @@ function BandMemberEditForm({ member, onSubmit }: { member: any; onSubmit: (data
     </div>
   );
 }
+
+          {/* Events Tab */}
+          <TabsContent value="events" className="space-y-6">
+            <EventManagement />
+          </TabsContent>

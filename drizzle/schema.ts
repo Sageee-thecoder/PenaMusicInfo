@@ -122,3 +122,34 @@ export const comments = mysqlTable("comments", {
 
 export type Comment = typeof comments.$inferSelect;
 export type InsertComment = typeof comments.$inferInsert;
+
+/**
+ * Events table - stores rehearsals and concerts
+ */
+export const events = mysqlTable("events", {
+  id: int("id").autoincrement().primaryKey(),
+  title: varchar("title", { length: 255 }).notNull(),
+  description: text("description"),
+  eventDate: timestamp("event_date").notNull(),
+  location: varchar("location", { length: 500 }),
+  eventType: mysqlEnum("event_type", ["prova", "konser", "diger"]).default("diger").notNull(),
+  createdBy: int("created_by").notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type Event = typeof events.$inferSelect;
+export type InsertEvent = typeof events.$inferInsert;
+
+/**
+ * Event participants table - stores which members participate in events
+ */
+export const eventParticipants = mysqlTable("event_participants", {
+  id: int("id").autoincrement().primaryKey(),
+  eventId: int("event_id").notNull(),
+  bandMemberId: int("band_member_id").notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type EventParticipant = typeof eventParticipants.$inferSelect;
+export type InsertEventParticipant = typeof eventParticipants.$inferInsert;

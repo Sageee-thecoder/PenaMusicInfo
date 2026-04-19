@@ -3,6 +3,7 @@ import { trpc } from "@/lib/trpc";
 import { Music, Users, Heart, ArrowRight } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useLocation } from "wouter";
+import UpcomingEvents from "@/components/UpcomingEvents";
 
 export default function Home() {
   const [, navigate] = useLocation();
@@ -155,6 +156,9 @@ export default function Home() {
           </Button>
         </div>
       </section>
+
+      {/* Upcoming Events */}
+      <UpcomingEvents />
 
       {/* Footer */}
       <footer className="bg-slate-950 border-t border-slate-800 py-8 px-4">

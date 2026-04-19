@@ -63,6 +63,13 @@
 - [x] Üye paneli erişim kontrolü (kendi kodu ile)
 - [x] Ortak panel erişim kontrolü (ortak şifre ile)
 
+## Takvim ve Etkinlik Yönetimi
+- [x] Events tablosu ve EventParticipants tablosu
+- [x] tRPC prosedürleri (CRUD işlemleri)
+- [x] Admin panelinde etkinlik yönetimi UI'ı
+- [x] Landing page'de yaklaşan etkinlikler
+- [x] Üye panelinde takvim görünümü (opsiyonel)
+
 ## Temizleme ve Yayına Hazırlık
 - [x] Test verilerini sil (başvurular, üyeler, şarkılar)
 - [x] Veritabanını sıfırla

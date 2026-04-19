@@ -3,7 +3,7 @@ import { getSessionCookieOptions } from "./_core/cookies";
 import { systemRouter } from "./_core/systemRouter";
 import { publicProcedure, router, protectedProcedure } from "./_core/trpc";
 import { z } from "zod";
-import { getBandMembers, createBandMember, updateBandMember, deleteBandMember, getApplications, getApplicationById, createApplication, updateApplication, getMemberAccessCode, createMemberAccessCode, getSongs, createSong, updateSong, deleteSong, getLikesBySongId, checkLike, createLike, deleteLike, getCommentsBySongId, createComment, deleteComment } from "./db";
+import { getBandMembers, createBandMember, updateBandMember, deleteBandMember, getApplications, getApplicationById, createApplication, updateApplication, getMemberAccessCode, createMemberAccessCode, getSongs, createSong, updateSong, deleteSong, getLikesBySongId, checkLike, createLike, deleteLike, getCommentsBySongId, createComment, deleteComment, getAllEvents, getEventById, createEvent, updateEvent, deleteEvent, getEventParticipants, addEventParticipant, removeEventParticipant, getEventWithParticipants } from "./db";
 import { TRPCError } from "@trpc/server";
 import { sendApplicationStatusEmail, sendApplicationConfirmationEmail } from "./email";
 
@@ -59,18 +59,10 @@ export const appRouter = router({
 
   // Applications router
   applications: router({
-    list: protectedProcedure
-      .input(z.object({ status: z.string().optional() }).optional())
-      .query(({ input, ctx }) => {
-        if (ctx.user?.role !== "admin") throw new TRPCError({ code: "FORBIDDEN" });
-        return getApplications(input?.status);
-      }),
-    get: protectedProcedure
+    list: publicProcedure.query(() => getApplications()),
+    getById: publicProcedure
       .input(z.object({ id: z.number() }))
-      .query(({ input, ctx }) => {
-        if (ctx.user?.role !== "admin") throw new TRPCError({ code: "FORBIDDEN" });
-        return getApplicationById(input.id);
-      }),
+      .query(({ input }) => getApplicationById(input.id)),
     create: publicProcedure
       .input(z.object({
         name: z.string().min(1),
@@ -80,8 +72,7 @@ export const appRouter = router({
         message: z.string().optional(),
       }))
       .mutation(async ({ input }) => {
-        const result = await createApplication({ ...input, status: "pending" });
-        // Send confirmation email
+        const result = await createApplication(input);
         await sendApplicationConfirmationEmail(input.email, input.name);
         return result;
       }),
@@ -93,34 +84,20 @@ export const appRouter = router({
       }))
       .mutation(async ({ input, ctx }) => {
         if (ctx.user?.role !== "admin") throw new TRPCError({ code: "FORBIDDEN" });
-        const { id, ...data } = input;
-
-        // Get application details before updating
-        const application = await getApplicationById(id);
-        if (!application) throw new TRPCError({ code: "NOT_FOUND" });
-
-        const result = await updateApplication(id, data);
-
-        // Send status update email if status changed
-        if (data.status && data.status !== application.status) {
-          await sendApplicationStatusEmail(
-            application.email,
-            application.name,
-            data.status,
-            data.notes
-          );
+        const app = await getApplicationById(input.id);
+        if (!app) throw new TRPCError({ code: "NOT_FOUND" });
+        const result = await updateApplication(input.id, input);
+        if (input.status && app.email) {
+          await sendApplicationStatusEmail(app.email, app.name, input.status);
         }
-
         return result;
       }),
   }),
 
   // Songs router
   songs: router({
-    list: publicProcedure
-      .input(z.object({ bandMemberId: z.number().optional() }).optional())
-      .query(({ input }) => getSongs(input?.bandMemberId)),
-    create: publicProcedure
+    list: publicProcedure.query(() => getSongs()),
+    create: protectedProcedure
       .input(z.object({
         bandMemberId: z.number(),
         title: z.string().min(1),
@@ -130,7 +107,7 @@ export const appRouter = router({
         spotifyUrl: z.string().optional(),
       }))
       .mutation(({ input }) => createSong(input)),
-    update: publicProcedure
+    update: protectedProcedure
       .input(z.object({
         id: z.number(),
         title: z.string().optional(),
@@ -139,13 +116,17 @@ export const appRouter = router({
         youtubeUrl: z.string().optional(),
         spotifyUrl: z.string().optional(),
       }))
-      .mutation(({ input }) => {
+      .mutation(({ input, ctx }) => {
+        if (ctx.user?.role !== "admin") throw new TRPCError({ code: "FORBIDDEN" });
         const { id, ...data } = input;
         return updateSong(id, data);
       }),
-    delete: publicProcedure
+    delete: protectedProcedure
       .input(z.object({ id: z.number() }))
-      .mutation(({ input }) => deleteSong(input.id)),
+      .mutation(({ input, ctx }) => {
+        if (ctx.user?.role !== "admin") throw new TRPCError({ code: "FORBIDDEN" });
+        return deleteSong(input.id);
+      }),
   }),
 
   // Likes router
@@ -195,6 +176,67 @@ export const appRouter = router({
         }
         return { memberId: code.bandMemberId, accessCode: code.accessCode };
       }),
+  }),
+
+  // Events router
+  events: router({
+    list: publicProcedure.query(() => getAllEvents()),
+    getById: publicProcedure
+      .input(z.object({ id: z.number() }))
+      .query(({ input }) => getEventById(input.id)),
+    getWithParticipants: publicProcedure
+      .input(z.object({ id: z.number() }))
+      .query(({ input }) => getEventWithParticipants(input.id)),
+    create: protectedProcedure
+      .input(z.object({
+        title: z.string().min(1),
+        description: z.string().optional(),
+        eventDate: z.date(),
+        location: z.string().optional(),
+        eventType: z.enum(["prova", "konser", "diger"]).default("diger"),
+      }))
+      .mutation(async ({ input, ctx }) => {
+        if (ctx.user?.role !== "admin") throw new TRPCError({ code: "FORBIDDEN" });
+        return createEvent({
+          ...input,
+          createdBy: ctx.user.id,
+        });
+      }),
+    update: protectedProcedure
+      .input(z.object({
+        id: z.number(),
+        title: z.string().optional(),
+        description: z.string().optional(),
+        eventDate: z.date().optional(),
+        location: z.string().optional(),
+        eventType: z.enum(["prova", "konser", "diger"]).optional(),
+      }))
+      .mutation(async ({ input, ctx }) => {
+        if (ctx.user?.role !== "admin") throw new TRPCError({ code: "FORBIDDEN" });
+        const { id, ...data } = input;
+        return updateEvent(id, data);
+      }),
+    delete: protectedProcedure
+      .input(z.object({ id: z.number() }))
+      .mutation(async ({ input, ctx }) => {
+        if (ctx.user?.role !== "admin") throw new TRPCError({ code: "FORBIDDEN" });
+        return deleteEvent(input.id);
+      }),
+    addParticipant: protectedProcedure
+      .input(z.object({ eventId: z.number(), bandMemberId: z.number() }))
+      .mutation(async ({ input, ctx }) => {
+        if (ctx.user?.role !== "admin") throw new TRPCError({ code: "FORBIDDEN" });
+        return addEventParticipant(input);
+      }),
+    removeParticipant: protectedProcedure
+      .input(z.object({ eventId: z.number(), bandMemberId: z.number() }))
+      .mutation(async ({ input, ctx }) => {
+        if (ctx.user?.role !== "admin") throw new TRPCError({ code: "FORBIDDEN" });
+        return removeEventParticipant(input.eventId, input.bandMemberId);
+      }),
+    getParticipants: publicProcedure
+      .input(z.object({ eventId: z.number() }))
+      .query(({ input }) => getEventParticipants(input.eventId)),
   }),
 });
 
